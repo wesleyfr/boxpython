@@ -1,0 +1,5 @@
+requests
+
+#for test
+httpretty
+sure

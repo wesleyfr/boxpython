@@ -1,0 +1,373 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Classes Reference &mdash; boxpython  documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="boxpython  documentation" href="index.html" />
+    <link rel="prev" title="Box Python SDK for v2 of the Box API" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="index.html" title="Box Python SDK for v2 of the Box API"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">boxpython  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="classes-reference">
+<h1>Classes Reference<a class="headerlink" href="#classes-reference" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="boxauthenticateflow">
+<h2>BoxAuthenticateFlow<a class="headerlink" href="#boxauthenticateflow" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="boxpython.BoxAuthenticateFlow">
+<em class="property">class </em><tt class="descclassname">boxpython.</tt><tt class="descname">BoxAuthenticateFlow</tt><big>(</big><em>client_id</em>, <em>client_secret</em><big>)</big><a class="headerlink" href="#boxpython.BoxAuthenticateFlow" title="Permalink to this definition">¶</a></dt>
+<dd><p>From the Client ID and Client Secret from Box, get the Access Token and the Refresh Token.</p>
+<dl class="docutils">
+<dt>Usage:</dt>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">flow</span> <span class="o">=</span> <span class="n">BoxAuthenticateFlow</span><span class="p">(</span><span class="s">&#39;my_id&#39;</span><span class="p">,</span> <span class="s">&#39;my_secret&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">get_authorization_url</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">access_token</span><span class="p">,</span> <span class="n">refresh_token</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">get_access_tokens</span><span class="p">(</span><span class="s">&#39;generated_auth_code&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="method">
+<dt id="boxpython.BoxAuthenticateFlow.get_access_tokens">
+<tt class="descname">get_access_tokens</tt><big>(</big><em>authorization_code</em><big>)</big><a class="headerlink" href="#boxpython.BoxAuthenticateFlow.get_access_tokens" title="Permalink to this definition">¶</a></dt>
+<dd><p>From the authorization code, get the &#8220;access token&#8221; and the &#8220;refresh token&#8221; from Box.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>authorization_code (str). Authorisation code emitted by Box at the url provided by the function <tt class="xref py py-func docutils literal"><span class="pre">get_authorization_url()</span></tt>.</dd>
+<dt>Returns:</dt>
+<dd>tuple. (access_token, refresh_token)</dd>
+<dt>Raises:</dt>
+<dd><p class="first">BoxError: An error response is returned from Box (status_code &gt;= 400).</p>
+<p>BoxHttpResponseError: Response from Box is malformed.</p>
+<p class="last">requests.exceptions.*: Any connection related problem.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="boxpython.BoxAuthenticateFlow.get_authorization_url">
+<tt class="descname">get_authorization_url</tt><big>(</big><em>redirect_uri=None</em><big>)</big><a class="headerlink" href="#boxpython.BoxAuthenticateFlow.get_authorization_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the url used to get an authorization code.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>redirect_uri (str): Https url where Box will redirect the user with the authorization code in the querystring. If None the value stored in the Box application settings will be used.</dd>
+<dt>Returns:</dt>
+<dd>str. Url used to get an authorization code.</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="boxsession">
+<h2>BoxSession<a class="headerlink" href="#boxsession" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="boxpython.BoxSession">
+<em class="property">class </em><tt class="descclassname">boxpython.</tt><tt class="descname">BoxSession</tt><big>(</big><em>client_id</em>, <em>client_secret</em>, <em>last_refresh_token</em>, <em>last_access_token=None</em>, <em>tokens_changed=None</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manage files and folder from Box.</p>
+<p>When you instanciate this class you have to provide at least the Refresh Token (found with <tt class="xref py py-class docutils literal"><span class="pre">BoxAuthenticateFlow</span></tt>). If the Access Token is not provided a request will be made to Box to get a new one (and a new Refresh Token will be generated).</p>
+<p>The Access Token expires every hour. When you use this class with an Access Token expired, a new one will be requested automatically.</p>
+<p>Use the &#8220;tokens_changed&#8221; callback to backup the Access Token and the Refresh Token each time they change. If you do not backup them, you will have to follow the authenticate flow again (with <tt class="xref py py-class docutils literal"><span class="pre">BoxAuthenticateFlow</span></tt>).</p>
+<dl class="docutils">
+<dt>Usage:</dt>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">tokens_changed</span><span class="p">(</span><span class="n">refresh_token</span><span class="p">,</span> <span class="n">access_token</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="n">save_to_file</span><span class="p">(</span><span class="n">refresh_token</span><span class="p">,</span> <span class="n">access_token</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">box</span> <span class="o">=</span> <span class="n">BoxSession</span><span class="p">(</span><span class="s">&#39;my_id&#39;</span><span class="p">,</span> <span class="s">&#39;my_secret&#39;</span><span class="p">,</span> <span class="n">refresh_token</span><span class="p">,</span> <span class="n">access_token</span><span class="p">,</span> <span class="n">tokens_changed</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">box</span><span class="o">.</span><span class="n">get_folder_info</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="method">
+<dt id="boxpython.BoxSession.chunk_upload_file">
+<tt class="descname">chunk_upload_file</tt><big>(</big><em>name</em>, <em>folder_id</em>, <em>file_path</em>, <em>progress_callback=None</em>, <em>chunk_size=1048576</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession.chunk_upload_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload a file chunk by chunk.</p>
+<p>The whole file is never loaded in memory.
+Use this function for big file.</p>
+<p>The callback(transferred, total) to let you know the upload progress.
+Upload can be cancelled if the callback raise an Exception.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">progress_callback</span><span class="p">(</span><span class="n">transferred</span><span class="p">,</span> <span class="n">total</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="k">print</span> <span class="s">&#39;Uploaded </span><span class="si">%i</span><span class="s"> bytes of </span><span class="si">%i</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">transferred</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="p">)</span>
+<span class="gp">... </span>   <span class="k">if</span> <span class="n">user_request_cancel</span><span class="p">:</span>
+<span class="gp">... </span>      <span class="k">raise</span> <span class="n">MyCustomCancelException</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">name (str): Name of the file on your Box storage.</p>
+<p>folder_id (int): ID of the folder where to upload the file.</p>
+<p>file_path (str): Local path of the file to upload.</p>
+<p>progress_callback (func): Function called each time a chunk is uploaded.</p>
+<p class="last">chunk_size (int): Size of chunks.</p>
+</dd>
+<dt>Returns:</dt>
+<dd>dict. Response from Box.</dd>
+<dt>Raises:</dt>
+<dd><p class="first">BoxError: An error response is returned from Box (status_code &gt;= 400).</p>
+<p>BoxHttpResponseError: Response from Box is malformed.</p>
+<p class="last">requests.exceptions.*: Any connection related problem.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="boxpython.BoxSession.create_folder">
+<tt class="descname">create_folder</tt><big>(</big><em>name</em>, <em>parent_folder_id=0</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession.create_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a folder</p>
+<p>If the folder exists, a BoxError will be raised.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">folder_id (int): Name of the folder.</p>
+<p class="last">parent_folder_id (int): ID of the folder where to create the new one.</p>
+</dd>
+<dt>Returns:</dt>
+<dd>dict. Response from Box.</dd>
+<dt>Raises:</dt>
+<dd><p class="first">BoxError: An error response is returned from Box (status_code &gt;= 400).</p>
+<p>BoxHttpResponseError: Response from Box is malformed.</p>
+<p class="last">requests.exceptions.*: Any connection related problem.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="boxpython.BoxSession.delete_folder">
+<tt class="descname">delete_folder</tt><big>(</big><em>folder_id</em>, <em>recursive=True</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession.delete_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete an existing folder</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>folder_id (int): ID of the folder to delete.
+recursive (bool): Delete all subfolder if True.</dd>
+<dt>Returns:</dt>
+<dd>dict. Response from Box.</dd>
+<dt>Raises:</dt>
+<dd><p class="first">BoxError: An error response is returned from Box (status_code &gt;= 400).</p>
+<p>BoxHttpResponseError: Response from Box is malformed.</p>
+<p class="last">requests.exceptions.*: Any connection related problem.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="boxpython.BoxSession.download_file">
+<tt class="descname">download_file</tt><big>(</big><em>file_id</em>, <em>dest_file_path</em>, <em>progress_callback=None</em>, <em>chunk_size=1048576</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession.download_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download a file.</p>
+<p>The whole file is never loaded in memory.</p>
+<p>The callback(transferred, total) to let you know the download progress.
+Download can be cancelled if the callback raise an Exception.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">progress_callback</span><span class="p">(</span><span class="n">transferred</span><span class="p">,</span> <span class="n">total</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="k">print</span> <span class="s">&#39;Downloaded </span><span class="si">%i</span><span class="s"> bytes of </span><span class="si">%i</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">transferred</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="p">)</span>
+<span class="gp">... </span>   <span class="k">if</span> <span class="n">user_request_cancel</span><span class="p">:</span>
+<span class="gp">... </span>      <span class="k">raise</span> <span class="n">MyCustomCancelException</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">file_id (int): ID of the file to download.</p>
+<p>dest_file_path (str): Local path where to store the downloaded filed.</p>
+<p>progress_callback (func): Function called each time a chunk is downloaded.</p>
+<p class="last">chunk_size (int): Size of chunks.</p>
+</dd>
+<dt>Raises:</dt>
+<dd><p class="first">BoxError: An error response is returned from Box (status_code &gt;= 400).</p>
+<p>BoxHttpResponseError: Response from Box is malformed.</p>
+<p class="last">requests.exceptions.*: Any connection related problem.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="boxpython.BoxSession.find_id_in_folder">
+<tt class="descname">find_id_in_folder</tt><big>(</big><em>name</em>, <em>parent_folder_id=0</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession.find_id_in_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find a folder or a file ID from its name, inside a given folder.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">name (str): Name of the folder or the file to find.</p>
+<p class="last">parent_folder_id (int): ID of the folder where to search.</p>
+</dd>
+<dt>Returns:</dt>
+<dd>int. ID of the file or folder found. None if not found.</dd>
+<dt>Raises:</dt>
+<dd><p class="first">BoxError: An error response is returned from Box (status_code &gt;= 400).</p>
+<p>BoxHttpResponseError: Response from Box is malformed.</p>
+<p class="last">requests.exceptions.*: Any connection related problem.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="boxpython.BoxSession.get_folder_info">
+<tt class="descname">get_folder_info</tt><big>(</big><em>folder_id</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession.get_folder_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get info on a folder</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>folder_id (int): ID of the folder.</dd>
+<dt>Returns:</dt>
+<dd>dict. Response from Box.</dd>
+<dt>Raises:</dt>
+<dd><p class="first">BoxError: An error response is returned from Box (status_code &gt;= 400).</p>
+<p>BoxHttpResponseError: Response from Box is malformed.</p>
+<p class="last">requests.exceptions.*: Any connection related problem.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="boxpython.BoxSession.get_folder_items">
+<tt class="descname">get_folder_items</tt><big>(</big><em>folder_id</em>, <em>limit=100</em>, <em>offset=0</em>, <em>fields_list=None</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession.get_folder_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get files and folders inside a given folder</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">folder_id (int): Where to get files and folders info.</p>
+<p>limit (int): The number of items to return.</p>
+<p>offset (int): The item at which to begin the response.</p>
+<p class="last">fields_list (list): List of attributes to get. All attributes if None.</p>
+</dd>
+<dt>Returns:</dt>
+<dd>dict. Response from Box.</dd>
+<dt>Raises:</dt>
+<dd><p class="first">BoxError: An error response is returned from Box (status_code &gt;= 400).</p>
+<p>BoxHttpResponseError: Response from Box is malformed.</p>
+<p class="last">requests.exceptions.*: Any connection related problem.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="boxpython.BoxSession.upload_file">
+<tt class="descname">upload_file</tt><big>(</big><em>name</em>, <em>folder_id</em>, <em>file_path</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession.upload_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload a file into a folder.</p>
+<p>Use function for small file otherwise there is the chunk_upload_file() function</p>
+<dl class="docutils">
+<dt>Args::</dt>
+<dd><p class="first">name (str): Name of the file on your Box storage.</p>
+<p>folder_id (int): ID of the folder where to upload the file.</p>
+<p class="last">file_path (str): Local path of the file to upload.</p>
+</dd>
+<dt>Returns:</dt>
+<dd>dict. Response from Box.</dd>
+<dt>Raises:</dt>
+<dd><p class="first">BoxError: An error response is returned from Box (status_code &gt;= 400).</p>
+<p>BoxHttpResponseError: Response from Box is malformed.</p>
+<p class="last">requests.exceptions.*: Any connection related problem.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="boxpython.BoxError">
+<em class="property">class </em><tt class="descclassname">boxpython.</tt><tt class="descname">BoxError</tt><big>(</big><em>status</em>, <em>attributes</em><big>)</big><a class="headerlink" href="#boxpython.BoxError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="boxpython.BoxHttpResponseError">
+<em class="property">class </em><tt class="descclassname">boxpython.</tt><tt class="descname">BoxHttpResponseError</tt><a class="headerlink" href="#boxpython.BoxHttpResponseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Classes Reference</a><ul>
+<li><a class="reference internal" href="#boxauthenticateflow">BoxAuthenticateFlow</a></li>
+<li><a class="reference internal" href="#boxsession">BoxSession</a></li>
+<li><a class="reference internal" href="#exceptions">Exceptions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Box Python SDK for v2 of the Box API</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/boxpython.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="index.html" title="Box Python SDK for v2 of the Box API"
+             >previous</a> |</li>
+        <li><a href="index.html">boxpython  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, wesleyfr.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+    </div>
+  </body>
+</html>
