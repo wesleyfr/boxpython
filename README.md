@@ -110,7 +110,7 @@ When new *Access/Refresh Token* are retrieved the ```tokens_changed``` callback 
 
 Documentation
 -------------
-Just here : 
+[Just here](https://rawgithub.com/wesleyfr/boxpython/master/docs/_build/html/index.html "Reference documentation")
 
 Project Status
 --------------
