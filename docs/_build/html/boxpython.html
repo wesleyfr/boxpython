@@ -169,6 +169,23 @@ Upload can be cancelled if the callback raise an Exception.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="boxpython.BoxSession.delete_file">
+<tt class="descname">delete_file</tt><big>(</big><em>file_id</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession.delete_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete an existing file</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>file_id (int): ID of the file to delete.</dd>
+<dt>Returns:</dt>
+<dd>dict. Response from Box.</dd>
+<dt>Raises:</dt>
+<dd><p class="first">BoxError: An error response is returned from Box (status_code &gt;= 400).</p>
+<p>BoxHttpResponseError: Response from Box is malformed.</p>
+<p class="last">requests.exceptions.*: Any connection related problem.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="boxpython.BoxSession.delete_folder">
 <tt class="descname">delete_folder</tt><big>(</big><em>folder_id</em>, <em>recursive=True</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession.delete_folder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete an existing folder</p>
@@ -225,6 +242,23 @@ Download can be cancelled if the callback raise an Exception.</p>
 </dd>
 <dt>Returns:</dt>
 <dd>int. ID of the file or folder found. None if not found.</dd>
+<dt>Raises:</dt>
+<dd><p class="first">BoxError: An error response is returned from Box (status_code &gt;= 400).</p>
+<p>BoxHttpResponseError: Response from Box is malformed.</p>
+<p class="last">requests.exceptions.*: Any connection related problem.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="boxpython.BoxSession.get_file_info">
+<tt class="descname">get_file_info</tt><big>(</big><em>file_id</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession.get_file_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get info on a file</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>file_id (int): ID of the folder.</dd>
+<dt>Returns:</dt>
+<dd>dict. Response from Box.</dd>
 <dt>Raises:</dt>
 <dd><p class="first">BoxError: An error response is returned from Box (status_code &gt;= 400).</p>
 <p>BoxHttpResponseError: Response from Box is malformed.</p>

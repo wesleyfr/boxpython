@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='boxpython',
-    version='1.0.0',
+    version='1.0.1',
     description='Box Python SDK for v2 of the Box.com API.',
     long_description="Full documentation : http://github.com/wesleyfr/boxpython",
     url='http://github.com/wesleyfr/boxpython/',
