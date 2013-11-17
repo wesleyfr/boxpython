@@ -140,6 +140,23 @@ class BoxPythonInteractiveScenarioTest(unittest.TestCase):
         self.assertEqual(resp['total_count'], 1)
         self.assertEqual(int(resp['entries'][0]['id']), new_folder)
 
+        my_file_content1 = "content of my file"
+        my_file1 = self.__create_file(my_file_content1)
+        try:
+            resp = box.upload_file("my_file1.txt", new_folder, my_file1)
+            my_file1_id = int(resp['entries'][0]['id'])
+        finally:
+            os.remove(my_file1)
+
+        resp = box.get_file_info(my_file1_id)
+        self.assertEqual(resp['name'], "my_file1.txt")
+
+        box.delete_file(my_file1_id)
+
+        with self.assertRaises(boxpython.BoxError) as cm:
+            box.get_file_info(my_file1_id)
+
+
         my_file_content1 = "content of my file "*20
         my_file1 = self.__create_file(my_file_content1)
         try:

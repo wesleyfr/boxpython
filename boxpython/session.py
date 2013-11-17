@@ -344,6 +344,25 @@ class BoxSession(object):
             file_obj.close()
 
 
+    def get_file_info(self, file_id):
+        """Get info on a file
+
+        Args:
+            file_id (int): ID of the folder.
+
+        Returns:
+            dict. Response from Box.
+
+        Raises:
+            BoxError: An error response is returned from Box (status_code >= 400).
+
+            BoxHttpResponseError: Response from Box is malformed.
+
+            requests.exceptions.*: Any connection related problem.
+        """
+        return self.__request("GET", "files/%s" % (file_id, ))
+
+
     def download_file(self, file_id, dest_file_path,
                             progress_callback=None,
                             chunk_size=1024*1024*1):
@@ -396,6 +415,24 @@ class BoxSession(object):
 
             if progress_callback:
                 progress_callback(transferred, total)
+
+    def delete_file(self, file_id):
+        """Delete an existing file
+
+        Args:
+            file_id (int): ID of the file to delete.
+
+        Returns:
+            dict. Response from Box.
+
+        Raises:
+            BoxError: An error response is returned from Box (status_code >= 400).
+
+            BoxHttpResponseError: Response from Box is malformed.
+
+            requests.exceptions.*: Any connection related problem.
+        """
+        return self.__request("DELETE", "files/%s" % (file_id, ))
 
 
 show_debug_messages = False

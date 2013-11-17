@@ -2,6 +2,12 @@ Box Python V2 SDK
 =================
 Box Python SDK for v2 of the Box API.
 
+Featuring:
+
+* Automatic tokens refresh (client does not have to handle token expiration)
+* Big file upload (upload by chunk and whole file is never loaded in memory)
+* Chunked download
+
 ###Prerequisites
 * requests
 
