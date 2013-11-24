@@ -289,12 +289,12 @@ class BoxSession(object):
             requests.exceptions.*: Any connection related problem.
         """
         try:
-            self.__do_upload_file(name, folder_id, file_path)
+            return self.__do_upload_file(name, folder_id, file_path)
         except BoxError, ex:
             if ex.status != 401:
                 raise
             #tokens had been refreshed, so we start again the upload
-            self.__do_upload_file(name, folder_id, file_path)
+            return self.__do_upload_file(name, folder_id, file_path)
 
 
     def __do_upload_file(self, name, folder_id, file_path):
@@ -348,14 +348,14 @@ class BoxSession(object):
         """
 
         try:
-            self.__do_chunk_upload_file(name, folder_id, file_path,
+            return self.__do_chunk_upload_file(name, folder_id, file_path,
                                     progress_callback,
                                     chunk_size)
         except BoxError, ex:
             if ex.status != 401:
                 raise
             #tokens had been refreshed, so we start again the upload
-            self.__do_chunk_upload_file(name, folder_id, file_path,
+            return self.__do_chunk_upload_file(name, folder_id, file_path,
                                     progress_callback,
                                     chunk_size)
 
@@ -368,12 +368,12 @@ class BoxSession(object):
             muw = MultipartUploadWrapper({'parent_id': unicode(folder_id),
                                           'filename': (name, file_obj)},
                                           progress_callback=progress_callback,
-                                          chunk_size=chunk_size,
-                                          raise_if_token_expired=True)
+                                          chunk_size=chunk_size)
             return self.__request("POST", "files/content",
                                 data = muw,
                                 headers = muw.content_type_header,
-                                json_data = False)
+                                json_data = False,
+                                raise_if_token_expired=True)
         finally:
             file_obj.close()
 

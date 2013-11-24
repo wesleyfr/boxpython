@@ -112,7 +112,7 @@ class BoxPythonInteractiveScenarioTest(unittest.TestCase):
     def run_full_scenario(self):
 
         (client_id, client_secret,
-        refresh_token, access_token) = self.__get_box_data(interactive=False)
+        refresh_token, access_token) = self.__get_box_data(interactive=True)
 
         box = boxpython.BoxSession(client_id, client_secret,
                                     refresh_token, access_token,
@@ -217,7 +217,7 @@ class BoxPythonInteractiveScenarioTest(unittest.TestCase):
         resp = box.delete_folder(folder_id)
 
     def __progress_callback(self, transferred, total):
-        print 'progress_callback = %s/%s' % (transferred, total, )
+        #print 'progress_callback = %s/%s' % (transferred, total, )
         self.passed_in_progress_callback = True
 
     def __get_file_content(self, file_path):
