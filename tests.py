@@ -305,7 +305,7 @@ class BoxPythonUnitTest(unittest.TestCase):
                     should.be.equal({})
 
         expect(httpretty.last_request()).have.property("body").\
-                    should.be.equal('null')
+                    should.be.equal('')
 
         expect(httpretty.last_request().headers['Authorization']).\
                     to.equal('Bearer %s' % access_token)

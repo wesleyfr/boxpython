@@ -23,7 +23,8 @@ class BoxSession(object):
     def __init__(self, client_id, client_secret,
                     last_refresh_token,
                     last_access_token=None,
-                    tokens_changed=None):
+                    tokens_changed=None,
+                    timeout=None):
         """Constructor
 
         Args:
@@ -37,6 +38,8 @@ class BoxSession(object):
 
             tokens_changed (func): Function called each time the Refresh Token and the Access Token is refreshed (because of expiration). Use this to backup your Refresh Token and the Access Token in order to reuse this class without using :class:`BoxAuthenticateFlow` class for getting tokens.
 
+            timeout (float): Stop waiting for a response after a given number of seconds with the timeout parameter. If None, waiting forever. http://www.python-requests.org/en/latest/user/quickstart/#timeouts
+
         Raises:
             BoxError: An error response is returned from Box (status_code >= 400).
 
@@ -45,7 +48,7 @@ class BoxSession(object):
             requests.exceptions.*: Any connection related problem.
 
         """
-        self.box_request = BoxRestRequest(client_id, client_secret)
+        self.box_request = BoxRestRequest(client_id, client_secret, timeout)
         self.client_id = client_id
         self.client_secret = client_secret
         self.refresh_token = last_refresh_token
@@ -92,7 +95,8 @@ class BoxSession(object):
     def __request(self, method, command, data=None,
                         querystring=None, files=None, headers=None,
                         stream=None,
-                        json_data=True):
+                        json_data=True,
+                        raise_if_token_expired=False):
         resp = self.box_request.request(method, command,
                                         data, querystring,
                                         files, headers, stream, json_data)
@@ -105,6 +109,8 @@ class BoxSession(object):
             if ex.status != 401:
                 raise
             self.__refresh_access_token()
+            if raise_if_token_expired:
+                raise
             resp = self.box_request.request(method, command,
                                             data, querystring,
                                             files, headers, stream, json_data)
@@ -282,12 +288,23 @@ class BoxSession(object):
 
             requests.exceptions.*: Any connection related problem.
         """
+        try:
+            self.__do_upload_file(name, folder_id, file_path)
+        except BoxError, ex:
+            if ex.status != 401:
+                raise
+            #tokens had been refreshed, so we start again the upload
+            self.__do_upload_file(name, folder_id, file_path)
+
+
+    def __do_upload_file(self, name, folder_id, file_path):
         file_obj = open(file_path, 'rb')
         try:
             return self.__request("POST", "files/content",
                                 files = {'filename': (name, file_obj)},
                                 data = {'parent_id': unicode(folder_id)},
-                                json_data = False)
+                                json_data = False,
+                                raise_if_token_expired=True)
         finally:
             file_obj.close()
 
@@ -329,19 +346,37 @@ class BoxSession(object):
 
             requests.exceptions.*: Any connection related problem.
         """
+
+        try:
+            self.__do_chunk_upload_file(name, folder_id, file_path,
+                                    progress_callback,
+                                    chunk_size)
+        except BoxError, ex:
+            if ex.status != 401:
+                raise
+            #tokens had been refreshed, so we start again the upload
+            self.__do_chunk_upload_file(name, folder_id, file_path,
+                                    progress_callback,
+                                    chunk_size)
+
+    def __do_chunk_upload_file(self, name, folder_id, file_path,
+                                    progress_callback,
+                                    chunk_size):
+
         file_obj = open(file_path, 'rb')
         try:
             muw = MultipartUploadWrapper({'parent_id': unicode(folder_id),
                                           'filename': (name, file_obj)},
                                           progress_callback=progress_callback,
-                                          chunk_size=chunk_size)
-            headers = muw.content_type_header
+                                          chunk_size=chunk_size,
+                                          raise_if_token_expired=True)
             return self.__request("POST", "files/content",
                                 data = muw,
-                                headers = headers,
+                                headers = muw.content_type_header,
                                 json_data = False)
         finally:
             file_obj.close()
+
 
 
     def get_file_info(self, file_id):

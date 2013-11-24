@@ -8,15 +8,11 @@ class BoxRestRequest(object):
     API_PREFIX = "https://api.box.com/2.0"
     API_UPLOAD_PREFIX = "https://upload.box.com/api/2.0"
 
-    def __init__(self, client_id, client_secret):
+    def __init__(self, client_id, client_secret, timeout=None):
         self.client_id = client_id
         self.client_secret = client_secret
         self.access_token = None
-
-        self.requests_func = {  "GET": requests.get,
-                                "POST": requests.post,
-                                "PUT": requests.put,
-                                "DELETE": requests.delete, }
+        self.timeout = timeout
 
     def get_authorization_url(self, redirect_uri=None):
         url = '%s/oauth2/authorize?response_type=code' \
@@ -36,7 +32,7 @@ class BoxRestRequest(object):
                     'client_secret': self.client_secret }
         if redirect_uri:
             params['redirect_uri'] = redirect_uri
-        return requests.post(url, data=params)
+        return requests.post(url, data=params, timeout=self.timeout)
 
     def refresh_access_token(self, refresh_token):
         url = '%s/oauth2/token' % BoxRestRequest.AUTH_PREFIX
@@ -45,7 +41,7 @@ class BoxRestRequest(object):
                     'client_id': self.client_id,
                     'client_secret': self.client_secret }
 
-        return requests.post(url, data=params)
+        return requests.post(url, data=params, timeout=self.timeout)
 
     def request(self, method,
                     command, data=None, querystring=None, files=None, headers=None, stream=None, json_data=True):
@@ -60,7 +56,7 @@ class BoxRestRequest(object):
 
         url = '%s/%s' % (url_prefix, command)
 
-        if json_data:
+        if json_data and data is not None:
             data = json.dumps(data)
 
         kwargs = { 'headers' : headers }
@@ -68,6 +64,7 @@ class BoxRestRequest(object):
         if querystring is not None: kwargs['params'] = querystring
         if files is not None: kwargs['files'] = files
         if stream is not None: kwargs['stream'] = stream
+        if self.timeout is not None: kwargs['timeout'] = self.timeout
 
-        return self.requests_func[method](url, **kwargs)
+        return requests.request(method=method, url=url, **kwargs)
 

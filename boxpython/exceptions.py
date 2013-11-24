@@ -12,9 +12,10 @@ class BoxError(Exception):
         self.error = None
         self.error_description = None
 
-        for (key, value) in attributes.iteritems():
-            if key in self.__dict__:
-                self.__dict__[key] = value
+        if hasattr(attributes, 'iteritems'):
+            for (key, value) in attributes.iteritems():
+                if key in self.__dict__:
+                    self.__dict__[key] = value
 
         msg_err = ''
         if self.message is not None:
