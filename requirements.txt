@@ -1,5 +1,8 @@
 requests
 
+#for PyPI packaging
+wheel
+
 #for testing
 httpretty
 sure
