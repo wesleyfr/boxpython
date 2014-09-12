@@ -1,5 +1,7 @@
 requests
 
-#for test
+#for testing
 httpretty
 sure
+six  #for "sure" pkg
+mock #for "sure" pkg

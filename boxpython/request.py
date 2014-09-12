@@ -1,6 +1,7 @@
 import requests
 import urllib
 import json
+from .upload import MultipartUploadWrapper
 
 class BoxRestRequest(object):
 
@@ -45,7 +46,8 @@ class BoxRestRequest(object):
 
     def request(self, method,
                     command, data=None, querystring=None, files=None, headers=None, stream=None, json_data=True):
-        if files:
+
+        if files or (data and isinstance(data, MultipartUploadWrapper)):
             url_prefix = BoxRestRequest.API_UPLOAD_PREFIX
         else:
             url_prefix = BoxRestRequest.API_PREFIX
