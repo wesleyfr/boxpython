@@ -214,7 +214,13 @@ class BoxPythonInteractiveScenarioTest(unittest.TestCase):
             finally:
                 os.remove(my_testfile)
 
+        search_result = box.search(query="boxpython_test_folder")
+        self.assertTrue(search_result["entries"] is not None)
+        self.assertEqual(folder_id,search_result['entries'][0]['id'])
+
         resp = box.delete_folder(folder_id)
+
+
 
     def __progress_callback(self, transferred, total):
         #print 'progress_callback = %s/%s' % (transferred, total, )
@@ -382,6 +388,38 @@ class BoxPythonUnitTest(unittest.TestCase):
             resp = box.get_folder_info(folder_id)
 
         self.assertEqual(cm.exception.status, 401)
+
+    @httpretty.activate
+    def test_search(self):
+        body_token = {"access_token": "T9cE5asGnuyYCCqIZFoWjFHvNbvVqHjl",
+                    "expires_in": 3600,
+                    "restricted_to": [],
+                    "token_type": "bearer",
+                    "refresh_token": "new_refresh_token!!" }
+
+        httpretty.register_uri(httpretty.POST,
+                "https://www.box.com/api/oauth2/token",
+                body=json.dumps(body_token),
+                status=200,
+                content_type='text/json')
+        folder_id = 168
+        body = get_dummy_search_result()
+        body["entries"][0]['id'] = folder_id
+
+        httpretty.register_uri(httpretty.GET,
+                        "https://api.box.com/2.0/search?query=Empowering",
+                        body=json.dumps(body),
+                        status=200,
+                        match_querystring=True,
+                        content_type='application/json')
+        refresh_token = "T9cE5asGnuyYCCqIZFoWjFHvNbvVqHjl"
+        access_token = "new_refresh_token!!"
+        box = boxpython.BoxSession(self.client_id, self.client_secret,
+                                    refresh_token, access_token)
+
+        search_result = box.search(query="Empowering")
+        self.assertTrue(search_result["entries"] is not None)
+        self.assertEqual(folder_id,search_result["entries"][0]["id"])
 
 
 
@@ -574,6 +612,77 @@ def get_dummy_folder_result():
                 "limit": 100
             }
         }
+
+def get_dummy_search_result():
+    return {
+        "total_count": 1,
+        "entries": [
+            {
+                "type": "file",
+                "id": "172245607",
+                "sequence_id": "1",
+                "etag": "1",
+                "sha1": "f89d97c5eea0a68e2cec911s932eca34a52355d2",
+                "name": "Box for Sales - Empowering Your Mobile Worker White paper 2pg (External).pdf",
+                "description": "This is old and needs to be updated - but general themes still apply",
+                "size": 408979,
+                "path_collection": {
+                    "total_count": 2,
+                    "entries": [
+                        {
+                            "type": "folder",
+                            "id": "0",
+                            "sequence_id": None,
+                            "etag": None,
+                            "name": "All Files"
+                        },
+                        {
+                            "type": "folder",
+                            "id": "2150506",
+                            "sequence_id": "1",
+                            "etag": "1",
+                            "name": "Marketing Active Work"
+                        }
+             ]
+                },
+                "created_at": "2014-05-17T12:59:45-07:00",
+                "modified_at": "2014-05-17T13:00:20-07:00",
+                "trashed_at": None,
+                "purged_at": None,
+                "content_created_at": "2014-05-17T12:58:58-07:00",
+                "content_modified_at": "2014-05-17T12:58:58-07:00",
+                "created_by": {
+                    "type": "user",
+                    "id": "19551097",
+                    "name": "Ted Blosser",
+                    "login": "ted@box.com"
+                },
+                "modified_by": {
+                    "type": "user",
+                    "id": "19551097",
+                    "name": "Ted Blosser",
+                    "login": "ted@box.com"
+                },
+                "owned_by": {
+                    "type": "user",
+                    "id": "19551097",
+                    "name": "Ted Blosser",
+                    "login": "ted@box.com"
+                },
+                "shared_link": None,
+                "parent": {
+                            "type": "folder",
+                            "id": "2150506",
+                            "sequence_id": "1",
+                            "etag": "1",
+                            "name": "Marketing Active Work"
+                },
+                "item_status": "active"
+            }
+        ],
+        "limit": 30,
+        "offset": 0
+    }
 
 if __name__ == '__main__':
     unittest.main()
