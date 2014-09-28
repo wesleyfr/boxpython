@@ -473,8 +473,8 @@ class BoxSession(object):
         """Searches for files/folders
 
         Args:
-            **kwargs (dict): A dictionary containing necessary parameters
-                            (check https://developers.box.com/docs/#search for 
+            \*\*kwargs (dict): A dictionary containing necessary parameters
+                            (check https://developers.box.com/docs/#search for
                             list of parameters)
 
         Returns:

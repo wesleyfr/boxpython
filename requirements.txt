@@ -8,3 +8,6 @@ httpretty
 sure
 six  #for "sure" pkg
 mock #for "sure" pkg
+
+#for generating documentation
+#Sphinx

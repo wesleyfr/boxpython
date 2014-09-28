@@ -50,7 +50,7 @@ By going through the url provided, you can get the authorisation code.
 The *Access Token* expires every hour. When using this session with an *Access Token* expired, a new one will be requested automatically.
 
 Use ```tokens_changed``` callback to backup *Access/Refresh Token* each time they change. If you do not backup them, next time you create a session, you will have to follow the authenticate flow first (with ```BoxAuthenticateFlow```).
-    
+
 
 ### Get Folder Information
 ```python
@@ -116,7 +116,28 @@ When new *Access/Refresh Token* are retrieved the ```tokens_changed``` callback 
 
 Documentation
 -------------
-[Just here](https://rawgithub.com/wesleyfr/boxpython/master/docs/_build/html/index.html "Reference documentation")
+[Read the reference documentation](https://rawgithub.com/wesleyfr/boxpython/master/docs/_build/html/index.html "Reference documentation")
+
+Running tests
+-------------
+
+#### Unit tests
+```bash
+python tests.py
+```
+
+#### Running end to end tests with real Box.com API
+
+Theses tests do not mock Box.com API. They create a folder on your box account in which they perform tests.
+When you run them, they interactively ask for a *client id* and a *secret* from your Box.com account.
+
+```bash
+python tests.py BoxPythonInteractiveScenarioTest.run_full_scenario
+```
+
+```bash
+python tests.py BoxPythonInteractiveScenarioTest.run_big_file_senario
+```
 
 Project Status
 --------------
@@ -128,6 +149,7 @@ Here is the files/folders actions available right now:
 - get_folder_items
 - upload_file
 - download_file
+- search
 
 For my personnal use, I don't need more.
 Feel free to add new action with a pull request.
@@ -135,7 +157,7 @@ Feel free to add new action with a pull request.
 Adding an action is easy as:
 ```python
 def delete_folder(self, folder_id):
-    return self.__request("DELETE", 
+    return self.__request("DELETE",
                             "folders/%s" % (folder_id, ),
                             querystring={'recursive': 'true'})
 ```

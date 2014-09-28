@@ -100,7 +100,7 @@
 <h2>BoxSession<a class="headerlink" href="#boxsession" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="boxpython.BoxSession">
-<em class="property">class </em><tt class="descclassname">boxpython.</tt><tt class="descname">BoxSession</tt><big>(</big><em>client_id</em>, <em>client_secret</em>, <em>last_refresh_token</em>, <em>last_access_token=None</em>, <em>tokens_changed=None</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">boxpython.</tt><tt class="descname">BoxSession</tt><big>(</big><em>client_id</em>, <em>client_secret</em>, <em>last_refresh_token</em>, <em>last_access_token=None</em>, <em>tokens_changed=None</em>, <em>timeout=None</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession" title="Permalink to this definition">¶</a></dt>
 <dd><p>Manage files and folder from Box.</p>
 <p>When you instanciate this class you have to provide at least the Refresh Token (found with <tt class="xref py py-class docutils literal"><span class="pre">BoxAuthenticateFlow</span></tt>). If the Access Token is not provided a request will be made to Box to get a new one (and a new Refresh Token will be generated).</p>
 <p>The Access Token expires every hour. When you use this class with an Access Token expired, a new one will be requested automatically.</p>
@@ -306,6 +306,28 @@ Download can be cancelled if the callback raise an Exception.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="boxpython.BoxSession.search">
+<tt class="descname">search</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Searches for files/folders</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>**kwargs (dict): A dictionary containing necessary parameters</dt>
+<dd>(check <a class="reference external" href="https://developers.box.com/docs/#search">https://developers.box.com/docs/#search</a> for
+list of parameters)</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>dict. Response from Box.</dd>
+<dt>Raises:</dt>
+<dd><p class="first">BoxError: An error response is returned from Box (status_code &gt;= 400).</p>
+<p>BoxHttpResponseError: Response from Box is malformed.</p>
+<p class="last">requests.exceptions.*: Any connection related problem.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="boxpython.BoxSession.upload_file">
 <tt class="descname">upload_file</tt><big>(</big><em>name</em>, <em>folder_id</em>, <em>file_path</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession.upload_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Upload a file into a folder.</p>
@@ -401,7 +423,7 @@ Download can be cancelled if the callback raise an Exception.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2013, wesleyfr.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>
