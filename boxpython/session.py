@@ -492,6 +492,22 @@ class BoxSession(object):
             query_string[key] = value
         return self.__request("GET","search",querystring=query_string)
 
+    def get_user_info(self):
+        """Returns a single complete user object about the user who is currently
+           logged in.
+
+        Returns:
+            dict. Response from Box.
+
+        Raises:
+            BoxError: An error response is returned from Box (status_code >= 400).
+
+            BoxHttpResponseError: Response from Box is malformed.
+
+            requests.exceptions.*: Any connection related problem.
+        """
+        return self.__request("GET", "users/me")
+
 
 show_debug_messages = False
 
