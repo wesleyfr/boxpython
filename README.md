@@ -150,6 +150,7 @@ Here is the files/folders actions available right now:
 - upload_file
 - download_file
 - search
+- get_user_info
 
 For my personnal use, I don't need more.
 Feel free to add new action with a pull request.
