@@ -306,6 +306,22 @@ Download can be cancelled if the callback raise an Exception.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="boxpython.BoxSession.get_user_info">
+<tt class="descname">get_user_info</tt><big>(</big><big>)</big><a class="headerlink" href="#boxpython.BoxSession.get_user_info" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Returns a single complete user object about the user who is currently</dt>
+<dd>logged in.</dd>
+<dt>Returns:</dt>
+<dd>dict. Response from Box.</dd>
+<dt>Raises:</dt>
+<dd><p class="first">BoxError: An error response is returned from Box (status_code &gt;= 400).</p>
+<p>BoxHttpResponseError: Response from Box is malformed.</p>
+<p class="last">requests.exceptions.*: Any connection related problem.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="boxpython.BoxSession.search">
 <tt class="descname">search</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession.search" title="Permalink to this definition">¶</a></dt>
 <dd><p>Searches for files/folders</p>

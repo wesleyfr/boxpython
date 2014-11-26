@@ -139,6 +139,13 @@ python tests.py BoxPythonInteractiveScenarioTest.run_full_scenario
 python tests.py BoxPythonInteractiveScenarioTest.run_big_file_senario
 ```
 
+Update Sphinx documentation
+---------------------------
+```bash
+cd docs
+make html
+```
+
 Project Status
 --------------
 

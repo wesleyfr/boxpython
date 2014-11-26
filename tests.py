@@ -123,6 +123,11 @@ class BoxPythonInteractiveScenarioTest(unittest.TestCase):
 
         folder_id = self.__create_boxpython_test_folder(box);
 
+        resp = box.get_user_info()
+        self.assertTrue('login' in resp)
+        self.assertTrue('job_title' in resp)
+        self.assertTrue('avatar_url' in resp)
+
         resp = box.get_folder_items(folder_id)
         self.assertEqual(resp, {u'total_count': 0, u'offset': 0, u'limit': 100, u'order': [{u'direction': u'ASC', u'by': u'type'}, {u'direction': u'ASC', u'by': u'name'}], u'entries': []})
 
