@@ -318,6 +318,8 @@ class BoxSession(object):
 
             folder_id (int): ID of the folder where to upload the file.
 
+            file_id (int): ID of the file you will be replacing.
+
             file_path (str): Local path of the file to upload.
 
         Returns:
