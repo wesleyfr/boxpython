@@ -308,6 +308,48 @@ class BoxSession(object):
         finally:
             file_obj.close()
 
+    def upload_new_file(self, name, folder_id, file_id, file_path):
+        """Upload a new version of a file into a folder.
+
+        Use function for small file otherwise there is the chunk_upload_file() function
+
+        Args::
+            name (str): Name of the file on your Box storage.
+
+            folder_id (int): ID of the folder where to upload the file.
+
+            file_path (str): Local path of the file to upload.
+
+        Returns:
+            dict. Response from Box.
+
+        Raises:
+            BoxError: An error response is returned from Box (status_code >= 400).
+
+            BoxHttpResponseError: Response from Box is malformed.
+
+            requests.exceptions.*: Any connection related problem.
+        """
+        try:
+            return self.__do_upload_new_file(name, folder_id, file_id, file_path)
+        except BoxError, ex:
+            if ex.status != 401:
+                raise
+            #tokens had been refreshed, so we start again the upload
+            return self.__do_upload_new_file(name, folder_id, file_id, file_path)
+
+
+    def __do_upload_new_file(self, name, folder_id, file_id, file_path):
+        file_obj = open(file_path, 'rb')
+        try:
+            return self.__request("POST", "files/"+str(file_id)+"/content",
+                                files = {'filename': (name, file_obj)},
+                                data = {'parent_id': unicode(folder_id)},
+                                json_data = False,
+                                raise_if_token_expired=True)
+        finally:
+            file_obj.close()
+
 
     def chunk_upload_file(self, name, folder_id, file_path,
                             progress_callback=None,
@@ -397,6 +439,10 @@ class BoxSession(object):
         """
         return self.__request("GET", "files/%s" % (file_id, ))
 
+    def copy_file(self, file_id, destination_folder_id):
+
+        return self.__request("POST", "/files/" + file_id + "/copy",
+                        data={ "parent": {"id": unicode(destination_folder_id)} })
 
     def download_file(self, file_id, dest_file_path,
                             progress_callback=None,
