@@ -296,18 +296,52 @@ class BoxSession(object):
             #tokens had been refreshed, so we start again the upload
             return self.__do_upload_file(name, folder_id, file_path)
 
+    def upload_new_file_version(self, name, folder_id, file_id, file_path):
+        """Upload a new version of a file into a folder.
 
-    def __do_upload_file(self, name, folder_id, file_path):
+        Use function for small file otherwise there is the chunk_upload_file() function.
+
+        Args::
+            name (str): Name of the file on your Box storage.
+
+            folder_id (int): ID of the folder where to upload the file.
+
+            file_id (int): ID of the file to update.
+
+            file_path (str): Local path of the file to upload.
+
+        Returns:
+            dict. Response from Box.
+
+        Raises:
+            BoxError: An error response is returned from Box (status_code >= 400).
+
+            BoxHttpResponseError: Response from Box is malformed.
+
+            requests.exceptions.*: Any connection related problem.
+        """
+        try:
+            return self.__do_upload_file(name, folder_id, file_path, file_id)
+        except BoxError, ex:
+            if ex.status != 401:
+                raise
+            #tokens had been refreshed, so we start again the upload
+            return self.__do_upload_file(name, folder_id, file_path, file_id)
+
+    def __do_upload_file(self, name, folder_id, file_path, file_id_to_update=None):
         file_obj = open(file_path, 'rb')
         try:
-            return self.__request("POST", "files/content",
+            if file_id_to_update is None:
+                cmd = "files/content"
+            else:
+                cmd = "files/" + unicode(file_id_to_update) + "/content"
+            return self.__request("POST", cmd,
                                 files = {'filename': (name, file_obj)},
                                 data = {'parent_id': unicode(folder_id)},
                                 json_data = False,
                                 raise_if_token_expired=True)
         finally:
             file_obj.close()
-
 
     def chunk_upload_file(self, name, folder_id, file_path,
                             progress_callback=None,
@@ -377,8 +411,6 @@ class BoxSession(object):
         finally:
             file_obj.close()
 
-
-
     def get_file_info(self, file_id):
         """Get info on a file
 
@@ -397,6 +429,31 @@ class BoxSession(object):
         """
         return self.__request("GET", "files/%s" % (file_id, ))
 
+    def copy_file(self, file_id, dest_folder_id):
+        """Copy file to new destination
+
+        Args:
+            file_id (int): ID of the folder.
+
+            dest_folder_id (int): ID of parent folder you are copying to.
+
+        Returns:
+            dict. Response from Box.
+
+        Raises:
+            BoxError: An error response is returned from Box (status_code >= 400).
+
+            BoxError: 409 - Item with the same name already exists.
+            In this case you will need download the file and upload a new version to your destination.
+            (Box currently doesn't have a method to copy a new verison.)
+
+            BoxHttpResponseError: Response from Box is malformed.
+
+            requests.exceptions.*: Any connection related problem.
+        """
+
+        return self.__request("POST", "/files/" + unicode(file_id) + "/copy",
+                        data={ "parent": {"id": unicode(dest_folder_id)} })
 
     def download_file(self, file_id, dest_file_path,
                             progress_callback=None,
