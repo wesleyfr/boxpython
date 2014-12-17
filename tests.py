@@ -161,14 +161,51 @@ class BoxPythonInteractiveScenarioTest(unittest.TestCase):
         with self.assertRaises(boxpython.BoxError) as cm:
             box.get_file_info(my_file1_id)
 
+        # Create file
 
         my_file_content1 = "content of my file "*20
         my_file1 = self.__create_file(my_file_content1)
         try:
             resp = box.upload_file("my_file1.txt", new_folder, my_file1)
             my_file1_id = int(resp['entries'][0]['id'])
+        except:
+            os.remove(my_file1)
+            raise
+
+        try:
+            resp = box.upload_file("my_file1.txt", new_folder, my_file1)
+            raise Exception("Uploading existing file should raise an error 409")
+        except:
+            pass
         finally:
             os.remove(my_file1)
+
+        self.__check_uploaded_file(box, my_file1_id, my_file_content1)
+
+        # Update file
+
+        my_file_content1 = "content of my file updated "*20
+        my_file1 = self.__create_file(my_file_content1)
+        try:
+            resp = box.upload_new_file_version(
+                "my_file1.txt", new_folder, my_file1_id, my_file1)
+        except:
+            pass
+        finally:
+            os.remove(my_file1)
+
+        self.__check_uploaded_file(box, my_file1_id, my_file_content1)
+
+        # Copy file
+        resp = box.create_folder("sub_folder", new_folder)
+        sub_folder = int(resp['id'])
+        resp = box.copy_file(my_file1_id, sub_folder)
+        my_file1_copied_id = int(resp['id'])
+
+        self.__check_uploaded_file(box, my_file1_id, my_file_content1)
+        self.__check_uploaded_file(box, my_file1_copied_id, my_file_content1)
+
+        # Chunk upload
 
         self.passed_in_progress_callback = False
         my_file_content2 = os.urandom(1024*1024*1) #1 MO
@@ -203,22 +240,11 @@ class BoxPythonInteractiveScenarioTest(unittest.TestCase):
             os.remove(my_file4)
         self.assertTrue(self.passed_in_progress_callback)
 
-        to_check = [(my_file1_id, my_file_content1),
-                    (my_file2_id, my_file_content2),
-                    (my_file3_id, my_file_content3),
-                    (my_file4_id, my_file_content4)
-                    ]
+        self.__check_uploaded_file(box, my_file2_id, my_file_content2)
+        self.__check_uploaded_file(box, my_file3_id, my_file_content3)
+        self.__check_uploaded_file(box, my_file4_id, my_file_content4)
 
-        for curr_check in to_check:
-            my_testfile = self.__create_file(b'')
-            try:
-                resp = box.download_file(curr_check[0], my_testfile,
-                            progress_callback=self.__progress_callback)
-                self.assertEqual(self.__get_file_content(my_testfile),
-                                        curr_check[1])
-            finally:
-                os.remove(my_testfile)
-
+        # Search
 
         search_result = box.search(query="boxpython_test_folder")
 
@@ -229,6 +255,16 @@ class BoxPythonInteractiveScenarioTest(unittest.TestCase):
 
         resp = box.delete_folder(folder_id)
 
+    def __check_uploaded_file(self, box, file_id, content):
+        my_testfile = self.__create_file(b'')
+        try:
+            resp = box.download_file(file_id, my_testfile,
+                        progress_callback=self.__progress_callback)
+            self.assertEqual(self.__get_file_content(my_testfile), content)
+        finally:
+            os.remove(my_testfile)
+
+        return resp
 
 
     def __progress_callback(self, transferred, total):

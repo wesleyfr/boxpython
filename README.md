@@ -155,7 +155,9 @@ Here is the files/folders actions available right now:
 - delete_folder
 - get_folder_items
 - upload_file
+- upload_new_file_version
 - download_file
+- copy_file
 - search
 - get_user_info
 

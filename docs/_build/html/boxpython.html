@@ -149,6 +149,28 @@ Upload can be cancelled if the callback raise an Exception.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="boxpython.BoxSession.copy_file">
+<tt class="descname">copy_file</tt><big>(</big><em>file_id</em>, <em>dest_folder_id</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession.copy_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy file to new destination</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">file_id (int): ID of the folder.</p>
+<p class="last">dest_folder_id (int): ID of parent folder you are copying to.</p>
+</dd>
+<dt>Returns:</dt>
+<dd>dict. Response from Box.</dd>
+<dt>Raises:</dt>
+<dd><p class="first">BoxError: An error response is returned from Box (status_code &gt;= 400).</p>
+<p>BoxError: 409 - Item with the same name already exists.
+In this case you will need download the file and upload a new version to your destination.
+(Box currently doesn&#8217;t have a method to copy a new verison.)</p>
+<p>BoxHttpResponseError: Response from Box is malformed.</p>
+<p class="last">requests.exceptions.*: Any connection related problem.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="boxpython.BoxSession.create_folder">
 <tt class="descname">create_folder</tt><big>(</big><em>name</em>, <em>parent_folder_id=0</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession.create_folder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a folder</p>
@@ -352,6 +374,28 @@ list of parameters)</dd>
 <dt>Args::</dt>
 <dd><p class="first">name (str): Name of the file on your Box storage.</p>
 <p>folder_id (int): ID of the folder where to upload the file.</p>
+<p class="last">file_path (str): Local path of the file to upload.</p>
+</dd>
+<dt>Returns:</dt>
+<dd>dict. Response from Box.</dd>
+<dt>Raises:</dt>
+<dd><p class="first">BoxError: An error response is returned from Box (status_code &gt;= 400).</p>
+<p>BoxHttpResponseError: Response from Box is malformed.</p>
+<p class="last">requests.exceptions.*: Any connection related problem.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="boxpython.BoxSession.upload_new_file_version">
+<tt class="descname">upload_new_file_version</tt><big>(</big><em>name</em>, <em>folder_id</em>, <em>file_id</em>, <em>file_path</em><big>)</big><a class="headerlink" href="#boxpython.BoxSession.upload_new_file_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload a new version of a file into a folder.</p>
+<p>Use function for small file otherwise there is the chunk_upload_file() function.</p>
+<dl class="docutils">
+<dt>Args::</dt>
+<dd><p class="first">name (str): Name of the file on your Box storage.</p>
+<p>folder_id (int): ID of the folder where to upload the file.</p>
+<p>file_id (int): ID of the file to update.</p>
 <p class="last">file_path (str): Local path of the file to upload.</p>
 </dd>
 <dt>Returns:</dt>
