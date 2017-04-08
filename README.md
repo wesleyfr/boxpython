@@ -128,7 +128,7 @@ python tests.py
 
 #### Running end to end tests with real Box.com API
 
-Theses tests do not mock Box.com API. They create a folder on your box account in which they perform tests.
+These tests do not mock Box.com API. They create a folder on your box account in which they perform tests.
 When you run them, they interactively ask for a *client id* and a *secret* from your Box.com account.
 
 ```bash
